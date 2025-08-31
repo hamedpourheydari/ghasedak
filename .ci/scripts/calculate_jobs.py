@@ -1,42 +1,20 @@
 #!/usr/bin/env python
-#
-# This file is licensed under the Affero General Public License (AGPL) version 3.
-#
-# Copyright (C) 2023 New Vector, Ltd
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-#
-# See the GNU Affero General Public License for more details:
-# <https://www.gnu.org/licenses/agpl-3.0.html>.
-#
-# Originally licensed under the Apache License, Version 2.0:
-# <http://www.apache.org/licenses/LICENSE-2.0>.
-#
-# [This file includes modifications made by New Vector Limited]
-#
-#
 
-# Calculate the trial jobs to run based on if we're in a PR or not.
 
 import json
 import os
 
 
 def set_output(key: str, value: str):
-    # See https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter
+
     with open(os.environ["GITHUB_OUTPUT"], "at") as f:
         print(f"{key}={value}", file=f)
 
 
 IS_PR = os.environ["GITHUB_REF"].startswith("refs/pull/")
 
-# First calculate the various trial jobs.
-#
-# For PRs, we only run each type of test with the oldest Python version supported (which
-# is Python 3.9 right now)
+# ابتدا وظایف آزمایشی مختلف را محاسبه کنید
+#برای درخواست‌های ادغام (PRs)، ما هر نوع آزمون را فقط با قدیمی‌ترین نسخهٔ پایتون که پشتیبانی می‌شود اجرا می‌کنیم (که در حال حاضر پایتون 3.9 است).
 
 trial_sqlite_tests = [
     {
@@ -97,9 +75,9 @@ test_matrix = json.dumps(
 set_output("trial_test_matrix", test_matrix)
 
 
-# First calculate the various sytest jobs.
+ # ابتدا وظایف مختلف sytest را محاسبه کنید.
 #
-# For each type of test we only run on bullseye on PRs
+# برای هر نوع آزمون، فقط در صورت ادغام (PRs) روی bullseye اجرا می‌شود.
 
 
 sytest_tests = [
