@@ -1,9 +1,8 @@
 #!/bin/sh
 #
-# Common commands to set up Complement's prerequisites in a GitHub Actions CI run.
-#
-# Must be called after Synapse has been checked out to `synapse/`.
-#
+# این اسکریپت معمولاً در گام‌های اولیه CI اجرا می‌شود تا قبل از اجرای تست‌های Complement، تمام پیش‌نیازها آماده باشند. 
+
+
 set -eu
 
 alias block='{ set +x; } 2>/dev/null; func() { echo "::group::$*"; set -x; }; func'
