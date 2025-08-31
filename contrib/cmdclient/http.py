@@ -95,7 +95,7 @@ class TwistedHttpClient(HttpClient):
         headers_dict = headers_dict or {}
 
         if "Content-Type" not in headers_dict:
-            raise defer.error(RuntimeError("Must include Content-Type header for PUTs"))
+            raise defer.error(RuntimeError("برای درخواست‌های PUT باید سربرگ Content-Type مشخص شود."))
 
         return self._create_request(
             "PUT", url, producer=_JsonProducer(json_data), headers_dict=headers_dict
@@ -146,7 +146,7 @@ class TwistedHttpClient(HttpClient):
         headers_dict["User-Agent"] = ["Synapse Cmd Client"]
 
         retries_left = 5
-        print("%s to %s with headers %s" % (method, url, headers_dict))
+        print("%s به %s توسط سربرگ ها %s" % (method, url, headers_dict))
         if self.verbose and producer:
             if "password" in producer.data:
                 temp = producer.data["password"]
@@ -171,7 +171,7 @@ class TwistedHttpClient(HttpClient):
                     raise e
 
         if self.verbose:
-            print("Status %s %s" % (response.code, response.phrase))
+            print("وضعیت %s %s" % (response.code, response.phrase))
             print(pformat(list(response.headers.getAllRawHeaders())))
         return response
 
