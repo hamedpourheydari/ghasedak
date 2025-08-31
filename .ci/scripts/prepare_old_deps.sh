@@ -1,27 +1,25 @@
 #!/usr/bin/env bash
-# this script is run by GitHub Actions in a plain `jammy` container; it
-# - installs the minimal system requirements, and poetry;
-# - patches the project definition file to refer to old versions only;
-# - creates a venv with these old versions using poetry; and finally
-# - invokes `trial` to run the tests with old deps.
+# این اسکریپت توسط GitHub Actions در یک کانتینر سادهٔ jammy اجرا می‌شود؛ آن 
+# -نیازمندی‌های حداقلی سیستم و Poetry را نصب می‌کند؛
+# - فایل تعریف پروژه را ویرایش می‌کند تا تنها به نسخه‌های قدیمی ارجاع دهد؛
+# - یک محیط مجازی (venv) با استفاده از Poetry و این نسخه‌های قدیمی ایجاد می‌کند؛ و در نهایت
+# - `trial` را فراخوانی می‌کند تا تست‌ها با وابستگی‌های قدیمی اجرا شوند.
+
+
+#-------------------------------------------#
+#این اسکریپت شِل (bash) برای اجرای تست‌های پروژه با قدیمی‌ترین نسخه‌های ممکن
+# از وابستگی‌ها (dependencies) طراحی شده است و در محیط GitHub Actions روی یک کانتینر اوبونتو jammy (22.04) اجرا می‌شود. 
+# هدف اصلی آن این است که اطمینان حاصل شود کد پروژه با نسخه‌های قدیمی وابستگی‌ها نیز به درستی کار می‌کند (یعنی سازگاری عقب‌رفتن — backward compatibility).
+#------------------------------------------#
+
+#این نوع تست‌ها به نام "lowest dependency tests" شناخته می‌شوند و در CI برای جلوگیری از مشکلات سازگاری در آینده استفاده می‌شوند. 
+
 
 set -ex
+#در صورت خطا، اسکریپت متوقف می‌شود
 
-# Prevent virtualenv from auto-updating pip to an incompatible version
+
 export VIRTUALENV_NO_DOWNLOAD=1
-
-# TODO: in the future, we could use an implementation of
-#   https://github.com/python-poetry/poetry/issues/3527
-#   https://github.com/pypa/pip/issues/8085
-# to select the lowest possible versions, rather than resorting to this sed script.
-
-# Patch the project definitions in-place:
-# - Replace all lower and tilde bounds with exact bounds
-# - Replace all caret bounds---but not the one that defines the supported Python version!
-# - Delete all lines referring to psycopg2 --- so no testing of postgres support.
-# - Use pyopenssl 17.0, which is the oldest version that works with
-#   a `cryptography` compiled against OpenSSL 1.1.
-# - Omit systemd: we're not logging to journal here.
 
 sed -i \
    -e "s/[~>]=/==/g" \
