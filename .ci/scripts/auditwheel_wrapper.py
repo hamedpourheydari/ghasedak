@@ -55,15 +55,11 @@ def cpython(wheel_file: str, name: str, version: Version, tag: Tag) -> str:
         return wheel_file
 
     check_is_abi3_compatible(wheel_file)
+#نکته: ممکن است برخی نکات روی مک جوابگو نباشد اما این امر قطعی نیست ولی برخی شواهد وجود دارد.
+#https://github.com/pantsbuild/pants/pull/12857  
+#https://github.com/pypa/pip/issues/9138  
+#https://github.com/pypa/packaging/pull/319  
 
-    # HACK: it seems that some older versions of pip will consider a wheel marked
-    # as macosx_11_0 as incompatible with Big Sur. I haven't done the full archaeology
-    # here; there are some clues in
-    #     https://github.com/pantsbuild/pants/pull/12857
-    #     https://github.com/pypa/pip/issues/9138
-    #     https://github.com/pypa/packaging/pull/319
-    # Empirically this seems to work, note that macOS 11 and 10.16 are the same,
-    # both versions are valid for backwards compatibility.
     platform = tag.platform.replace("macosx_11_0", "macosx_10_16")
     abi3_tag = Tag(tag.interpreter, "abi3", platform)
 
@@ -82,31 +78,38 @@ def cpython(wheel_file: str, name: str, version: Version, tag: Tag) -> str:
 
 def main(wheel_file: str, dest_dir: str, archs: Optional[str]) -> None:
     """Entry point"""
-
-    # Parse the wheel file name into its parts. Note that `parse_wheel_filename`
-    # normalizes the package name (i.e. it converts matrix_synapse ->
-    # matrix-synapse), which is not what we want.
+    
+# نام فایل wheel را به بخش‌های تشکیل‌دهنده‌اش تجزیه کنید. توجه داشته باشید که تابع `parse_wheel_filename`
+# نام بسته را به صورت استاندارد درمی‌آورد (مثلاً تبدیل matrix_synapse به matrix-synapse)،
+# که چیزی نیست که ما بخواهیم.
+    
     _, version, build, tags = parse_wheel_filename(os.path.basename(wheel_file))
     name = os.path.basename(wheel_file).split("-")[0]
 
     if len(tags) != 1:
-        # We expect only a wheel file with only a single tag
-        raise Exception(f"Unexpectedly found multiple tags: {tags}")
+        
+# انتظار داریم که فقط یک فایل wheel با یک برچسب واحد وجود داشته باشد 
 
     tag = next(iter(tags))
 
     if build:
-        # We don't use build tags in Synapse
+        
+## ما در سیناپس از برچسب‌های ساخت (build tags) استفاده نمی‌کنیم
+        
         raise Exception(f"Unexpected build tag: {build}")
 
-    # If the wheel is for cpython then convert it into an abi3 wheel.
+    # اگر فایل wheel مربوط به cpython باشد، آن را به یک wheel abi3 تبدیل کنید.
+
     if tag.interpreter.startswith("cp"):
         wheel_file = cpython(wheel_file, name, version, tag)
 
-    # Finally, repair the wheel.
+    # در نهایت، فایل wheel را تعمیر کنید.
+    
     if archs is not None:
-        # If we are given archs then we are on macos and need to use
-        # `delocate-listdeps`.
+
+        # اگر معماری‌های (archs) مشخصی داده شده باشد،
+        #یعنی در سیستم macos هستیم و باید از `delocate-listdeps` استفاده کنیم.
+        
         subprocess.run(["delocate-listdeps", wheel_file], check=True)
         subprocess.run(
             ["delocate-wheel", "--require-archs", archs, "-w", dest_dir, wheel_file],
