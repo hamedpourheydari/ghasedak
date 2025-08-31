@@ -19,7 +19,6 @@ block Install custom gotestfmt template
 endblock
 
 block Check out Complement
-  # Attempt to check out the same branch of Complement as the PR. If it
-  # doesn't exist, fallback to HEAD.
+
   synapse/.ci/scripts/checkout_complement.sh
 endblock
