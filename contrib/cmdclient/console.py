@@ -156,10 +156,10 @@ class SynapseCmd(cmd.Cmd):
         pwd = None
         pwd2 = "_"
         while pwd != pwd2:
-            pwd = getpass.getpass("Type a password for this user: ")
-            pwd2 = getpass.getpass("Retype the password: ")
+            pwd = getpass.getpass("یک رمزعبور برای این کاربر بنویسید: ")
+            pwd2 = getpass.getpass("تکرار رمز عبور: ")
             if pwd != pwd2 or len(pwd) == 0:
-                print("Password mismatch.")
+                print("عدم تطابق رمز عبور!")
                 pwd = None
             else:
                 password = pwd
@@ -184,7 +184,7 @@ class SynapseCmd(cmd.Cmd):
             if flow["type"] == "m.login.recaptcha" or (
                 "stages" in flow and "m.login.recaptcha" in flow["stages"]
             ):
-                print("Unable to register: Home server requires captcha.")
+                print("امکان ثبت‌نام وجود ندارد: سرور میزبان نیاز به تأیید کپچا دارد. ")
                 return
             if flow["type"] == "m.login.password" and "stages" not in flow:
                 passwordFlow = flow
@@ -244,14 +244,14 @@ class SynapseCmd(cmd.Cmd):
         print(json_res)
 
         if "flows" not in json_res:
-            print("Failed to find any login flows.")
+            print("هیچ جریان ورودی یافت نشد.")
             return False
 
         flow = json_res["flows"][0]  # assume first is the one we want.
         if "type" not in flow or "m.login.password" != flow["type"] or "stages" in flow:
             fallback_url = self._url() + "/login/fallback"
             print(
-                "Unable to login via the command line client. Please visit "
+                "امکان ورود کاربر از طریق خط فرمان وجود ندارد. لطفا مراجعه کنید به "
                 "%s to login." % fallback_url
             )
             return False
@@ -290,7 +290,7 @@ class SynapseCmd(cmd.Cmd):
         )
         print(json_res)
         if "sid" in json_res:
-            print("Token sent. Your session ID is %s" % (json_res["sid"]))
+            print("توکن ارسال شد. شماره نشست شما عبارت است از %s" % (json_res["sid"]))
 
     def do_emailvalidate(self, line):
         """Validate and associate a third party ID
@@ -378,14 +378,14 @@ class SynapseCmd(cmd.Cmd):
                 print("Must specify set|get and a room ID.")
                 return
             if args["action"].lower() not in ["set", "get"]:
-                print("Must specify set|get, not %s" % args["action"])
+                print("باید مشخص کنید عملیات ارسال/دریافت است;نه %s" % args["action"])
                 return
 
             path = "/rooms/%s/topic" % urllib.quote(args["roomid"])
 
             if args["action"].lower() == "set":
                 if "topic" not in args:
-                    print("Must specify a new topic.")
+                    print("باید یک موضوع جدید مشخص کنید")
                     return
                 body = {"topic": args["topic"]}
                 reactor.callFromThread(self._run_and_pprint, "PUT", path, body)
@@ -423,7 +423,7 @@ class SynapseCmd(cmd.Cmd):
                     self._identityServerUrl()
                     + "/_matrix/identity/api/v1/pubkey/ed25519"
                 )
-
+            #--------------------pubKey--------------------#
                 pubKey = None
                 pubKeyObj = yield self.http_client.do_request("GET", url)
                 if "public_key" in pubKeyObj:
@@ -431,7 +431,7 @@ class SynapseCmd(cmd.Cmd):
                         NACL_ED25519, binascii.unhexlify(pubKeyObj["public_key"])
                     )
                 else:
-                    print("No public key found in pubkey response!")
+                    print("هیچ کلید عمومی‌ای در پاسخ یافت نشد! ")
 
                 sigValid = False
 
@@ -439,7 +439,7 @@ class SynapseCmd(cmd.Cmd):
                     for signame in json_res["signatures"]:
                         if signame not in TRUSTED_ID_SERVERS:
                             print(
-                                "Ignoring signature from untrusted server %s"
+                                "سرور امضای نامعتبر را نادیده میگیرد %s"
                                 % (signame)
                             )
                         else:
@@ -447,20 +447,21 @@ class SynapseCmd(cmd.Cmd):
                                 verify_signed_json(json_res, signame, pubKey)
                                 sigValid = True
                                 print(
-                                    "Mapping %s -> %s correctly signed by %s"
+                                    "تطبیق %s -> %s به درستی امضا شده است %s"
                                     % (userstring, json_res["mxid"], signame)
                                 )
                                 break
                             except SignatureVerifyException as e:
-                                print("Invalid signature from %s" % (signame))
+                                print("امضای نامعتبر از سوی %s" % (signame))
                                 print(e)
+            #--------------------pubKey--------------------#
 
                 if sigValid:
-                    print("Resolved 3pid %s to %s" % (userstring, json_res["mxid"]))
+                    print("Resolved 3pid %s در %s" % (userstring, json_res["mxid"]))
                     mxid = json_res["mxid"]
                 else:
                     print(
-                        "Got association for %s but couldn't verify signature"
+                        "ارتباط برقرار شد برای %s اما نتوانست امضای آن را تایید کند."
                         % (userstring)
                     )
 
@@ -499,10 +500,10 @@ class SynapseCmd(cmd.Cmd):
         """
         args = self._parse(line, ["type", "roomid", "qp"])
         if "type" not in args or "roomid" not in args:
-            print("Must specify type and room ID.")
+            print("نوع و شناسه اتاق را مشخص کنید")
             return
         if args["type"] not in ["members", "messages"]:
-            print("Unrecognised type: %s" % args["type"])
+            print("نوع ناشناخته: %s" % args["type"])
             return
         room_id = args["roomid"]
         path = "/rooms/%s/%s" % (urllib.quote(room_id), args["type"])
@@ -514,7 +515,7 @@ class SynapseCmd(cmd.Cmd):
                     key_value = key_value_str.split("=")
                     qp[key_value[0]] = key_value[1]
                 except Exception:
-                    print("Bad query param: %s" % key_value)
+                    print("پارامتر جستجو بد است: %s" % key_value)
                     return
 
         reactor.callFromThread(self._run_and_pprint, "GET", path, query_params=qp)
@@ -553,7 +554,7 @@ class SynapseCmd(cmd.Cmd):
         args = self._parse(line, ["method", "path", "data"])
         # sanity check
         if "method" not in args or "path" not in args:
-            print("Must specify path and method.")
+            print("باید مسیر و روش مشخص شود.")
             return
 
         args["method"] = args["method"].upper()
@@ -568,7 +569,7 @@ class SynapseCmd(cmd.Cmd):
             "XDELETE",
         ]
         if args["method"] not in valid_methods:
-            print("Unsupported method: %s" % args["method"])
+            print("این متود پشتیبانی نمی شود: %s" % args["method"])
             return
 
         if "data" not in args:
@@ -577,7 +578,7 @@ class SynapseCmd(cmd.Cmd):
             try:
                 args["data"] = json.loads(args["data"])
             except Exception as e:
-                print("Data is not valid JSON. %s" % e)
+                print("داده ها به صورت JSON معتبر نیستند %s" % e)
                 return
 
         qp = {"access_token": self._tok()}
@@ -609,7 +610,7 @@ class SynapseCmd(cmd.Cmd):
             try:
                 timeout = int(args["timeout"])
             except ValueError:
-                print("Timeout must be in milliseconds.")
+                print("زمانبندی باید به صورت میلی ثانیه باشد")
                 return
         reactor.callFromThread(self._do_event_stream, timeout)
 
@@ -654,7 +655,7 @@ class SynapseCmd(cmd.Cmd):
             "PUT",
             path,
             data=data,
-            alt_text="Sent receipt for %s" % event["msg_id"],
+            alt_text="رسید ارسال شد برای %s" % event["msg_id"],
         )
 
     def _do_membership_change(self, roomid, membership, userid):
@@ -760,14 +761,14 @@ def save_config(config):
 def main(server_url, identity_server_url, username, token, config_path):
     print("Synapse command line client")
     print("===========================")
-    print("Server: %s" % server_url)
-    print("Type 'help' to get started.")
-    print("Close this console with CTRL+C then CTRL+D.")
+    print("سرور: %s" % server_url)
+    print("برای شروع 'help' را بنویسید.")
+    print("این صفحه توسط CTRL+C سپس CTRL+D بسته میشود.")
     if not username or not token:
-        print("-  'register <username>' - Register an account")
-        print("-  'stream' - Connect to the event stream")
-        print("-  'create <roomid>' - Create a room")
-        print("-  'send <roomid> <message>' - Send a message")
+        print("-  'register <username>' -ثبت اکانت")
+        print("-  'stream' - اتصال به رخدادها")
+        print("-  'create <roomid>' - ساخت اتاق")
+        print("-  'send <roomid> <message>' - ارسال پیام")
     http_client = TwistedHttpClient()
 
     # the command line client
@@ -783,7 +784,7 @@ def main(server_url, identity_server_url, username, token, config_path):
                 http_client.verbose = "on" == syn_cmd.config["verbose"]
             except Exception:
                 pass
-            print("Loaded config from %s" % config_path)
+            print("بارگزاری پیکربندی از %s" % config_path)
     except Exception:
         pass
 
@@ -811,20 +812,20 @@ if __name__ == "__main__":
         help="The URL of the identity server to talk to.",
     )
     parser.add_argument(
-        "-u", "--username", dest="username", help="Your username on the server."
+        "-u", "--username", dest="username", help="نام کاربری شما بر روی سرور."
     )
-    parser.add_argument("-t", "--token", dest="token", help="Your access token.")
+    parser.add_argument("-t", "--token", dest="token", help="شما به توکن دسترسی دارید.")
     parser.add_argument(
         "-c",
         "--config",
         dest="config",
         default=CONFIG_JSON,
-        help="The location of the config.json file to read from.",
+        help="فایل پیکربندی از مسیر config.json خوانده میشود. ",
     )
     args = parser.parse_args()
 
     if not args.server:
-        print("You must supply a server URL to communicate with.")
+        print("شما باید یک آدرس URL سرور برای ارتباط فراهم کنید.")
         parser.print_help()
         sys.exit(1)
 
