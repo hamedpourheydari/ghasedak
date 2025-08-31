@@ -92,12 +92,12 @@ def make_graph(db_name: str, room_id: str, file_prefix: str, limit: int) -> None
         label = (
             "<"
             "<b>%(name)s </b><br/>"
-            "Type: <b>%(type)s </b><br/>"
-            "State key: <b>%(state_key)s </b><br/>"
-            "Content: <b>%(content)s </b><br/>"
-            "Time: <b>%(time)s </b><br/>"
-            "Depth: <b>%(depth)s </b><br/>"
-            "State group: %(state_group)s<br/>"
+            "نوع: <b>%(type)s </b><br/>"
+            "کلید وضعیت: <b>%(state_key)s </b><br/>"
+            "محتوا: <b>%(content)s </b><br/>"
+            "زمان: <b>%(time)s </b><br/>"
+            "عمق: <b>%(depth)s </b><br/>"
+            "گروه وضعیت: %(state_group)s<br/>"
             ">"
         ) % {
             "name": event.event_id,
@@ -131,7 +131,7 @@ def make_graph(db_name: str, room_id: str, file_prefix: str, limit: int) -> None
         if len(event_ids) <= 1:
             continue
 
-        cluster = pydot.Cluster(str(group), label=f"<State Group: {str(group)}>")
+        cluster = pydot.Cluster(str(group), label=f"<گروه وضعیت: {str(group)}>")
 
         for event_id in event_ids:
             cluster.add_node(node_map[event_id])
@@ -144,15 +144,15 @@ def make_graph(db_name: str, room_id: str, file_prefix: str, limit: int) -> None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Generate a PDU graph for a given room by talking "
-        "to the given Synapse SQLite file to get the list of PDUs. \n"
-        "Requires pydot."
+        description="یک نمودار PDU برای یک اتاق مشخص تولید می‌کند، با استفاده از "
+        "فایل SQLite سیناپس برای دریافت لیست PDUs. \n"
+        "نیازمند pydot است."
     )
     parser.add_argument(
         "-p",
         "--prefix",
         dest="prefix",
-        help="String to prefix output files with",
+        help="رشته‌ای که به عنوان پیشوند فایل‌های خروجی استفاده می‌شود",
         default="graph_output",
     )
     parser.add_argument("-l", "--limit", help="Only retrieve the last N events.")
