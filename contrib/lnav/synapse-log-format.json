@@ -1,8 +1,8 @@
 {
   "$schema": "https://lnav.org/schemas/format-v1.schema.json",
   "synapse": {
-    "title": "Synapse logs",
-    "description": "Logs output by Synapse, a Matrix homesever, under its default logging config.",
+    "title": "لاگ های Synapse ",
+    "description": "خروجی لاگ‌های سیناپس، سرور خانگی ماتریکس (Matrix homeserver)، تحت پیکربندی پیش‌فرض ثبت لاگ.",
     "regex": {
       "log": {
         "pattern": ".*(?<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}) - (?<logger>.+) - (?<lineno>\\d+) - (?<level>\\w+) - (?<context>.+) - (?<body>.*)"
