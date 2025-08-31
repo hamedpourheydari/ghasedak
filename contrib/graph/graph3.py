@@ -36,7 +36,7 @@ def make_graph(file_name: str, file_prefix: str, limit: int) -> None:
     Generate a dot and SVG file for a graph of events in the room based on the
     topological ordering by reading line-delimited JSON from a file.
     """
-    print("Reading lines")
+    print("درحال خواندن خطوط")
     with open(file_name) as f:
         lines = f.readlines()
 
@@ -49,11 +49,11 @@ def make_graph(file_name: str, file_prefix: str, limit: int) -> None:
 
     events = [make_event_from_dict(json.loads(line), room_version) for line in lines]
 
-    print("Loaded events.")
+    print("رویدادها بارگزاری شدند.")
 
     events.sort(key=lambda e: e.depth)
 
-    print("Sorted events")
+    print("رویدادها مرتب سازی شدند.")
 
     if limit:
         events = events[-int(limit) :]
@@ -95,11 +95,11 @@ def make_graph(file_name: str, file_prefix: str, limit: int) -> None:
         label = (
             "<"
             "<b>%(name)s </b><br/>"
-            "Type: <b>%(type)s </b><br/>"
-            "State key: <b>%(state_key)s </b><br/>"
-            "Content: <b>%(content)s </b><br/>"
-            "Time: <b>%(time)s </b><br/>"
-            "Depth: <b>%(depth)s </b><br/>"
+            "نوع: <b>%(type)s </b><br/>"
+            "وضعیت کلید: <b>%(state_key)s </b><br/>"
+            "محتوا: <b>%(content)s </b><br/>"
+            "زمان: <b>%(time)s </b><br/>"
+            "عمق: <b>%(depth)s </b><br/>"
             ">"
         ) % {
             "name": event.event_id,
@@ -115,7 +115,7 @@ def make_graph(file_name: str, file_prefix: str, limit: int) -> None:
         node_map[event.event_id] = node
         graph.add_node(node)
 
-    print("Created Nodes")
+    print("گره ها ایجاد شدند")
 
     for event in events:
         for prev_id in event.prev_event_ids():
@@ -130,31 +130,31 @@ def make_graph(file_name: str, file_prefix: str, limit: int) -> None:
             edge = pydot.Edge(node_map[event.event_id], end_node)
             graph.add_edge(edge)
 
-    print("Created edges")
+    print("یال ها ایجاد شدند")
 
     graph.write("%s.dot" % file_prefix, format="raw", prog="dot")
 
-    print("Created Dot")
+    print("فایل DOT ایجاد شد")
 
     graph.write_svg("%s.svg" % file_prefix, prog="dot")
 
-    print("Created svg")
+    print("فایل SVG ایجاد شد")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Generate a PDU graph for a given room by reading "
-        "from a file with line deliminated events. \n"
-        "Requires pydot."
+        description=""یک نمودار PDU برای یک اتاق مشخص تولید می‌کند، با خواندن "
+                    "رویدادها از یک فایل که هر خط آن یک رویداد است. \n"
+                    "نیازمند pydot است."
     )
     parser.add_argument(
         "-p",
         "--prefix",
         dest="prefix",
-        help="String to prefix output files with",
+        help="رشته‌ای که به عنوان پیشوند فایل‌های خروجی استفاده می‌شود",
         default="graph_output",
     )
-    parser.add_argument("-l", "--limit", help="Only retrieve the last N events.")
+    parser.add_argument("-l", "--limit", help="فقط آخرین N رویداد را پردازش کند.")
     parser.add_argument("event_file")
 
     args = parser.parse_args()
