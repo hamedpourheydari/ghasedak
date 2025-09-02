@@ -1,7 +1,7 @@
 name: matrix-synapse
 base: core18
 version: git
-summary: Reference Matrix homeserver
+summary: سرور مرجع ماتریکس
 description: |
   Synapse is the reference Matrix homeserver.
   Matrix is a federated and decentralised instant messaging and VoIP system.
