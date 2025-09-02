@@ -90,19 +90,19 @@ AUTH="Authorization: Bearer $TOKEN"
 
 for ROOM in "${ROOMS_ARRAY[@]}"; do
     echo "########################################### $(date) ################# "
-    echo "pruning room: $ROOM ..."
+    echo "درحال پاکسازی اتاق: $ROOM ..."
     ROOM=${ROOM%#*}
     #set -x
-    echo "check for alias in db..."
+    echo "بررسی نام مستعار در پایگاه داده..."
     # for postgres:
     sql "SELECT * FROM room_aliases WHERE room_id='$ROOM'"
-    echo "get event..."
+    echo "دریافت رویداد..."
     # for postgres:
     EVENT_ID=$(sql "SELECT event_id FROM events WHERE type='m.room.message' AND received_ts<'$UNIX_TIMESTAMP' AND room_id='$ROOM' ORDER BY received_ts DESC LIMIT 1;")
     if [ "$EVENT_ID" == "" ]; then
-      echo "no event $TIME"
+      echo "هیچ رویدادی یافت نشد $TIME"
     else
-      echo "event: $EVENT_ID"
+      echo "رویداد: $EVENT_ID"
       SLEEP=2
       set -x
       # call purge
@@ -110,7 +110,7 @@ for ROOM in "${ROOMS_ARRAY[@]}"; do
       PURGE_ID=$(echo "$OUT" |grep purge_id|cut -d'"' -f4 )
       if [ "$PURGE_ID" == "" ]; then
         # probably the history purge is already in progress for $ROOM
-        : "continuing with next room"
+        : "پاکسازی درحال اجراست به اتاق بعدی بروید"
       else
         while : ; do
           # get status of purge and sleep longer each time if still active
