@@ -1,9 +1,9 @@
 {{ template "head" . }}
 
 {{ template "prom_content_head" . }}
-<h1>System Resources</h1>
+<h1>منابع سیستم</h1>
 
-<h3>CPU</h3>
+<h3>پردازنده</h3>
 <div id="process_resource_utime"></div>
 <script>
 new PromConsole.Graph({
@@ -17,11 +17,11 @@ new PromConsole.Graph({
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
   yUnits: "%",
-  yTitle: "CPU Usage"
+  yTitle: "میزان استفاده از پردازنده"
 })
 </script>
 
-<h3>Memory</h3>
+<h3>حافظه</h3>
 <div id="process_resident_memory_bytes"></div>
 <script>
 new PromConsole.Graph({
@@ -33,8 +33,8 @@ new PromConsole.Graph({
   height: 150,
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
-  yUnits: "bytes",
-  yTitle: "Usage"
+  yUnits: "بایت",
+  yTitle: "میزان استفاده"
 })
 </script>
 
@@ -57,7 +57,7 @@ new PromConsole.Graph({
 
 <h1>Reactor</h1>
 
-<h3>Total reactor time</h3>
+<h3>زمان کل ری اکتور</h3>
 <div id="reactor_total_time"></div>
 <script>
 new PromConsole.Graph({
@@ -70,12 +70,12 @@ new PromConsole.Graph({
   height: 150,
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/s",
-  yTitle: "Usage"
+  yUnits: "ثانیه/ثانیه",
+  yTitle: "میزان استفاده"
 })
 </script>
 
-<h3>Average reactor tick time</h3>
+<h3>میانگین زمان هرچرخه ری اکتور</h3>
 <div id="reactor_average_time"></div>
 <script>
 new PromConsole.Graph({
@@ -87,14 +87,14 @@ new PromConsole.Graph({
   height: 150,
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s",
-  yTitle: "Time"
+  yUnits: "ثانیه",
+  yTitle: "زمان"
 })
 </script>
 
-<h1>Storage</h1>
+<h1>ذخیره سازی</h1>
 
-<h3>Queries</h3>
+<h3>درخواست های پایگاه داده</h3>
 <div id="synapse_storage_query_time"></div>
 <script>
 new PromConsole.Graph({
@@ -103,12 +103,12 @@ new PromConsole.Graph({
   name: "[[verb]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
-  yUnits: "queries/s",
-  yTitle: "Queries"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
-<h3>Transactions</h3>
+<h3>تراکنش ها</h3>
 <div id="synapse_storage_transaction_time"></div>
 <script>
 new PromConsole.Graph({
@@ -118,12 +118,12 @@ new PromConsole.Graph({
   min: 0,
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
-  yUnits: "txn/s",
-  yTitle: "Transactions"
+  yUnits: "تراکنش/ثانیه",
+  yTitle: "تراکنش ها"
 })
 </script>
 
-<h3>Transaction execution time</h3>
+<h3>زمان اجرای تراکنش</h3>
 <div id="synapse_storage_transactions_time_sec"></div>
 <script>
 new PromConsole.Graph({
@@ -133,12 +133,12 @@ new PromConsole.Graph({
   min: 0,
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/s",
-  yTitle: "Usage"
+  yUnits: "ثانیه/ثانیه",
+  yTitle: "میزان استفاده"
 })
 </script>
 
-<h3>Average time waiting for database connection</h3>
+<h3>میانگین زمان انتظار برای اتصال به پایگاه داده</h3>
 <div id="synapse_storage_avg_waiting_time"></div>
 <script>
 new PromConsole.Graph({
@@ -148,12 +148,12 @@ new PromConsole.Graph({
   min: 0,
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s",
-  yTitle: "Time"
+  yUnits: "ثانیه",
+  yTitle: "زمان"
 })
 </script>
 
-<h3>Cache request rate</h3>
+<h3>نرخ درخواست های کش</h3>
 <div id="synapse_cache_request_rate"></div>
 <script>
 new PromConsole.Graph({
@@ -163,12 +163,12 @@ new PromConsole.Graph({
   min: 0,
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
-  yUnits: "rps",
-  yTitle: "Cache request rate"
+  yUnits: "نرخ درخواست بر ثانیه",
+  yTitle: "نرخ درخواست کش"
 })
 </script>
 
-<h3>Cache size</h3>
+<h3>اندازه کش</h3>
 <div id="synapse_cache_size"></div>
 <script>
 new PromConsole.Graph({
@@ -178,13 +178,13 @@ new PromConsole.Graph({
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yUnits: "",
-  yTitle: "Items"
+  yTitle: "تعداد آیتم ها"
 })
 </script>
 
-<h1>Requests</h1>
+<h1>درخواست ها</h1>
 
-<h3>Requests by Servlet</h3>
+<h3>درخواست ها بر اساس سرورلت</h3>
 <div id="synapse_http_server_request_count_servlet"></div>
 <script>
 new PromConsole.Graph({
@@ -193,11 +193,11 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[method]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
-<h4>&nbsp;(without <tt>EventStreamRestServlet</tt> or <tt>SyncRestServlet</tt>)</h4>
+<h4>&nbsp;(بدون <tt>EventStreamRestServlet</tt> یا <tt>SyncRestServlet</tt>)</h4>
 <div id="synapse_http_server_request_count_servlet_minus_events"></div>
 <script>
 new PromConsole.Graph({
@@ -206,12 +206,12 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[method]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
-<h3>Average response times</h3>
+<h3>میانگین زمان پاسخگویی</h3>
 <div id="synapse_http_server_response_time_avg"></div>
 <script>
 new PromConsole.Graph({
@@ -220,12 +220,12 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/req",
-  yTitle: "Response time"
+  yUnits: "ثانیه/درخواست",
+  yTitle: "زمان پاسخ"
 })
 </script>
 
-<h3>All responses by code</h3>
+<h3>همه پاسخ ها بر اساس کد</h3>
 <div id="synapse_http_server_responses"></div>
 <script>
 new PromConsole.Graph({
@@ -234,12 +234,12 @@ new PromConsole.Graph({
   name: "[[method]] / [[code]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
-<h3>Error responses by code</h3>
+<h3>پاسخ های خطا بر اساس کد</h3>
 <div id="synapse_http_server_responses_err"></div>
 <script>
 new PromConsole.Graph({
@@ -248,13 +248,13 @@ new PromConsole.Graph({
   name: "[[method]] / [[code]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
 
-<h3>CPU Usage</h3>
+<h3>میزان مصرف پردازنده</h3>
 <div id="synapse_http_server_response_ru_utime"></div>
 <script>
 new PromConsole.Graph({
@@ -263,13 +263,13 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/s",
-  yTitle: "CPU Usage"
+  yUnits: "ثانیه/ثانیه",
+  yTitle: "میزان مصرف پردازنده"
 })
 </script>
 
 
-<h3>DB Usage</h3>
+<h3>میزان استفاده از پایگاه داده</h3>
 <div id="synapse_http_server_response_db_txn_duration"></div>
 <script>
 new PromConsole.Graph({
@@ -278,13 +278,13 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/s",
-  yTitle: "DB Usage"
+  yUnits: "ثانیه/ثانیه",
+  yTitle: "میزان استفاده از پایگاه داده"
 })
 </script>
 
 
-<h3>Average event send times</h3>
+<h3>میانگین زمان ارسال پیام</h3>
 <div id="synapse_http_server_send_time_avg"></div>
 <script>
 new PromConsole.Graph({
@@ -293,14 +293,14 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[servlet]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "s/req",
-  yTitle: "Response time"
+  yUnits: "ثانیه/درخواست",
+  yTitle: "زمان پاسخ"
 })
 </script>
 
 <h1>Federation</h1>
 
-<h3>Sent Messages</h3>
+<h3>پیام های ارسالی</h3>
 <div id="synapse_federation_client_sent"></div>
 <script>
 new PromConsole.Graph({
@@ -309,12 +309,12 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[type]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
-<h3>Received Messages</h3>
+<h3>پیام های دریافتی</h3>
 <div id="synapse_federation_server_received"></div>
 <script>
 new PromConsole.Graph({
@@ -323,12 +323,12 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]] [[type]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "req/s",
-  yTitle: "Requests"
+  yUnits: "درخواست/ثانیه",
+  yTitle: "درخواست ها"
 })
 </script>
 
-<h3>Pending</h3>
+<h3>درانتظار ارسال</h3>
 <div id="synapse_federation_transaction_queue_pending"></div>
 <script>
 new PromConsole.Graph({
@@ -338,13 +338,13 @@ new PromConsole.Graph({
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yUnits: "",
-  yTitle: "Units"
+  yTitle: "واحد"
 })
 </script>
 
-<h1>Clients</h1>
+<h1>کاربران</h1>
 
-<h3>Notifiers</h3>
+<h3>اطلاع رسانی</h3>
 <div id="synapse_notifier_listeners"></div>
 <script>
 new PromConsole.Graph({
@@ -355,11 +355,11 @@ new PromConsole.Graph({
   yAxisFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yHoverFormatter: PromConsole.NumberFormatter.humanizeNoSmallPrefix,
   yUnits: "",
-  yTitle: "Listeners"
+  yTitle: "شنوندگان"
 })
 </script>
 
-<h3>Notified Events</h3>
+<h3>رخدادهای اطلاع رسانی شده</h3>
 <div id="synapse_notifier_notified_events"></div>
 <script>
 new PromConsole.Graph({
@@ -368,8 +368,8 @@ new PromConsole.Graph({
   name: "[[job]]-[[index]]",
   yAxisFormatter: PromConsole.NumberFormatter.humanize,
   yHoverFormatter: PromConsole.NumberFormatter.humanize,
-  yUnits: "events/s",
-  yTitle: "Event rate"
+  yUnits: "رخداد/ثانیه",
+  yTitle: "نرخ رخداد"
 })
 </script>
 
